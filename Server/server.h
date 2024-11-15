@@ -64,25 +64,6 @@ struct DateDifference
     int hours;
 };
 
-DateDifference calculate_date_difference(const string &old_date, const string &new_date)
-{
-    std::tm tm_old = {}, tm_new = {};
-    std::istringstream ss_old(old_date);
-    std::istringstream ss_new(new_date);
-
-    ss_old >> std::get_time(&tm_old, "%Y-%m-%d %H:%M");
-    ss_new >> std::get_time(&tm_new, "%Y-%m-%d %H:%M");
-
-    auto old_time = std::chrono::system_clock::from_time_t(std::mktime(&tm_old));
-    auto new_time = std::chrono::system_clock::from_time_t(std::mktime(&tm_new));
-
-    auto duration = std::chrono::duration_cast<std::chrono::minutes>(new_time - old_time);
-    int days = duration.count() / (60 * 24);
-    int hours = (duration.count() % (60 * 24)) / 60;
-
-    return DateDifference{days, hours};
-}
-
 vector<string> split(const string &input, char delimiter)
 {
     vector<string> result;
@@ -106,25 +87,6 @@ string lower(const string &input)
     }
 
     return result;
-}
-string generate_ticket_code()
-{
-    srand(time(NULL));
-
-    const string alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    const int alphabet_length = alphabet.length();
-
-    string ticket_code;
-
-    for (int i = 0; i < 3; ++i)
-    {
-        ticket_code += alphabet[rand() % alphabet_length];
-    }
-    for (int i = 0; i < 3; ++i)
-    {
-        ticket_code += to_string(rand() % 10);
-    }
-    return ticket_code;
 }
 std::string checknoti(int client_socket)
 {
