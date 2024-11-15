@@ -58,12 +58,6 @@ struct Ticket
     string payment;
 };
 
-struct DateDifference
-{
-    int days;
-    int hours;
-};
-
 vector<string> split(const string &input, char delimiter)
 {
     vector<string> result;
@@ -112,8 +106,6 @@ void functions(int client_socket, const User &user);
 void connect_client(int client_socket);
 void admin_mode(int client_socket);
 void notify_affected_users(const vector<int> &affected_user_ids, const string &noti, int c);
-pair<string, string> get_old_dates(const string &flight_num);
 std::vector<int> get_affected_user_id(const std::string &flight_num);
 std::string get_username_from_id(int user_id);
-pair<string, string> get_old_dates(const string &flight_num);
 void handle_notifications(int client_socket, vector<int> affected_ids, const string noti, int c);

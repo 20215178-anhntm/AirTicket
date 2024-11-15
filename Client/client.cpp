@@ -135,7 +135,7 @@ int main()
                                 cout << "Enter destination point : ";
                                 getline(cin, destination_point);
 
-                                cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
+                                cout << "Enter departure date (format YYYY-MM-DD): ";
                                 getline(cin, departure_date);
                                 search_msg += "search1/" + departure_point + "/" + destination_point + "/" + departure_date;
                                 break;
@@ -151,7 +151,7 @@ int main()
                                 cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
                                 getline(cin, departure_date);
 
-                                cout << "Enter return date (or leave blank for any, format YYYY-MM-DD): ";
+                                cout << "Enter return date (format YYYY-MM-DD): ";
                                 getline(cin, return_date);
                                 search_msg += "search2/" + departure_point + "/" + destination_point + "/" + departure_date + "/" + return_date;
                                 break;
@@ -167,7 +167,7 @@ int main()
                                 cout << "Enter destination point : ";
                                 getline(cin, destination_point);
 
-                                cout << "Enter departure date (or leave blank for any, format YYYY-MM-DD): ";
+                                cout << "Enter departure date (format YYYY-MM-DD): ";
                                 getline(cin, departure_date);
 
                                 cout << "Enter return date (or leave blank for any, format YYYY-MM-DD): ";
@@ -249,21 +249,6 @@ int main()
                     else if (response1.find("N_found") == 0)
                     {
                         std::cout << "Can't find the flight!\n";
-                    }
-                    else if (response1.find("Y_view/") == 0)
-                    {
-
-                        string ticket_data = response1.substr(7);
-                        std::cout << "Tickets information:" << endl;
-                        display_ticket_information(ticket_data);
-                    }              
-                    else if (response1.find("N_invalid_class") == 0)
-                    {
-                        std::cout << "Invalid seat class\n";
-                    }
-                    else if (response1.find("N_flight_not_found") == 0)
-                    {
-                        std::cout << "Can't find your flight number";
                     }
                 }
             }
