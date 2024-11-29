@@ -87,7 +87,7 @@ std::string checknoti(int client_socket)
     string notification;
     {
         std::lock_guard<std::mutex> lock(clientNotifMapMutex);
-        auto it = clientNotifMap.find(client_socket);
+        auto it = clientNotifMap.find(client_socket); // find noti of specific client socket
         if (it != clientNotifMap.end())
         {
             notification = it->second;

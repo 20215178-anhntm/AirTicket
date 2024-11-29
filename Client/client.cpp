@@ -175,6 +175,10 @@ int main()
                                 search_msg += "search4/" + company + "/" + departure_point + "/" + destination_point + "/" + departure_date + "/" + return_date;
                                 break;
                             }
+                            else if (choice2 == 5) // exit
+                            {
+                            	break;
+                            }
                             else
                             {
                                 std::cout << "Invalid choice!\n";

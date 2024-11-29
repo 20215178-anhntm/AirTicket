@@ -59,10 +59,10 @@ int main()
         std::cout << "Received request from " << client_ip << endl;
         {
             std::lock_guard<std::mutex> lock(clientNotifMapMutex);
-            clientNotifMap[client_socket] = "";
+            clientNotifMap[client_socket] = ""; // save client connection
         }
-        thread client_thread(connect_client, client_socket);
-        client_thread.detach();
+        thread client_thread(connect_client, client_socket); // create a new thread to serve new client
+        client_thread.detach(); // ensure that thread can run independently, do not depend on primary thread
     }
 
     close(server_socket);
@@ -228,33 +228,6 @@ void admin_mode(int client_socket)
     
 }
 
-bool flight_num_exists(const string &flight_num)
-{
-    cout << "Checking flight number: " << flight_num << endl;
-    sqlite3_stmt *stmt;
-    string query = "SELECT 1 FROM Flights WHERE flight_num = ? LIMIT 1";
-
-    if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
-    {
-        cerr << "Error preparing select statement: " << sqlite3_errmsg(db) << endl;
-        return false;
-    }
-
-    sqlite3_bind_text(stmt, 1, flight_num.c_str(), -1, SQLITE_STATIC);
-
-    if (sqlite3_step(stmt) == SQLITE_ROW)
-    {
-        sqlite3_finalize(stmt);
-        return true;
-    }
-    else
-    {
-        cerr << "Flight number not found or error executing select statement: " << sqlite3_errmsg(db) << endl;
-        sqlite3_finalize(stmt);
-        return false;
-    }
-}
-
 void functions(int client_socket, const User &user)
 {
     char buffer[BUFFER_SIZE];
@@ -281,11 +254,6 @@ void functions(int client_socket, const User &user)
             }
             return;
         }
-        if (lower(received) == "view")
-        {
-            received += "/";
-        }
-
         vector<string> type1 = split(received, '/');
 
         if (lower(type1[0]) == "search1")
@@ -450,7 +418,7 @@ void search_flight3(int client_socket, const string &company, const string &depa
     string result_str = "Y_found/";
     string query2 =
         "SELECT "
-        "F1.*, F2.*"
+        "F1.*, F2.* "
         "FROM "
         "Flights F1 "
         "JOIN "
@@ -573,6 +541,7 @@ void search_flight3(int client_socket, const string &company, const string &depa
 }
 void search_flight2(int client_socket, const string &departure_point, const string &destination_point, const string &departure_date, const string &return_date, const User &user)
 {
+    cout << departure_point << destination_point << endl;
     string msg;
     string noti = checknoti(client_socket);
     sqlite3_stmt *stmt;
@@ -582,13 +551,14 @@ void search_flight2(int client_socket, const string &departure_point, const stri
     string result_str = "Y_found/";
     string query2 =
         "SELECT "
-        "F1.*, F2.*"
+        "F1.*, F2.* "
         "FROM "
         "Flights F1 "
         "JOIN "
-        "Flights F2 ON F1.destination_point = F2.departure_point AND F1.departure_date < F2.departure_date"
+        "Flights F2 ON F1.destination_point = F2.departure_point AND F1.departure_date < F2.departure_date "
         "WHERE "
         "F1.departure_point = ? AND F2.destination_point = ? AND F1.departure_date<=? AND F2.return_date<=?;";
+    cout << query2 << endl;
 
     if (sqlite3_prepare_v2(db, query2.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
@@ -599,6 +569,7 @@ void search_flight2(int client_socket, const string &departure_point, const stri
         send(client_socket, msg.c_str(), msg.length(), 0);
         return;
     }
+    cout << query2 << endl;
 
     sqlite3_bind_text(stmt, 1, departure_point.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 2, destination_point.c_str(), -1, SQLITE_STATIC);
@@ -656,6 +627,8 @@ void search_flight2(int client_socket, const string &departure_point, const stri
         send(client_socket, msg.c_str(), msg.length(), 0);
         return;
     }
+    
+    cout << query << endl;
 
     sqlite3_bind_text(stmt, 1, departure_point.c_str(), -1, SQLITE_STATIC);
     sqlite3_bind_text(stmt, 2, destination_point.c_str(), -1, SQLITE_STATIC);
@@ -716,13 +689,13 @@ void search_flight4(int client_socket, const string &company, const string &depa
     string result_str = "Y_found/";
     string query2 =
         "SELECT "
-        "F1.*, F2.*"
+        "F1.*, F2.* "
         "FROM "
         "Flights F1 "
         "JOIN "
         "Flights F2 ON F1.destination_point = F2.departure_point AND F1.departure_date < F2.departure_date "
         "WHERE "
-        "F1.departure_point = ? AND F2.destination_point = ? AND F1.departure_date=<=? AND F2.return_date<=? AND F1.company=? AND F2.company=?;";
+        "F1.departure_point = ? AND F2.destination_point = ? AND F1.departure_date <=? AND F2.return_date<=? AND F1.company=? AND F2.company=?;";
 
     if (sqlite3_prepare_v2(db, query2.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
@@ -780,7 +753,7 @@ void search_flight4(int client_socket, const string &company, const string &depa
                       flight2.departure_point + "," + flight2.destination_point + "," +
                       flight2.departure_date + "," + flight2.return_date + ";";
     }
-    string query = "SELECT * FROM Flights WHERE company = ? AND departure_point = ? AND destination_point = ? AND departure_date <= ? AND return_date >= ?";
+    string query = "SELECT * FROM Flights WHERE company = ? AND departure_point = ? AND destination_point = ? AND departure_date <= ? AND return_date <= ?";
 
     if (sqlite3_prepare_v2(db, query.c_str(), -1, &stmt, nullptr) != SQLITE_OK)
     {
