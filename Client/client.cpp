@@ -188,7 +188,13 @@ int main()
                     }
                     else if (lower_choice1 == "2") // book ticket
                     {
-                     	break;
+                     	string flight_num, seat_class;
+                        cout << "Enter your flight number: ";
+                        getline(cin, flight_num);
+                        cout << "Enter your desired seat class: ";
+                        getline(cin, seat_class);
+                        string book_msg = "book/" + flight_num + "/" + seat_class;
+                        send(client_socket, book_msg.c_str(), book_msg.length(), 0);
                     }
                     else if (lower_choice1 == "3") // view ticket detail
                     {
@@ -253,6 +259,31 @@ int main()
                     else if (response1.find("N_found") == 0)
                     {
                         std::cout << "Can't find the flight!\n";
+                    }
+                    else if (response1.find("Y_book/") == 0)
+                    {
+                        string ticket_code = response1.substr(7, 6);
+                        string ticket_price1 = response1.substr(13, 3);
+                        string ticket_price2 = response1.substr(16, 6);
+                        std::cout << "You've booked successfully\n";
+                        std::cout << "Your ticket code: " << ticket_code << endl;
+                        std::cout << "You will have to pay " << ticket_price1 << "." << ticket_price2 << endl;
+                    }
+                    else if (response1.find("N_book") == 0)
+                    {
+                        std::cout << "Can't find your flight number" << endl;
+                    }
+                    else if (response1.find("N_book_miss") == 0)
+                    {
+                        std::cout << "Input flight number and seatclass for continue booking" << endl;
+                    }
+                    else if (response1.find("N_no_seats/") == 0)
+                    {
+                        std::cout << "No seat class " << response1.substr(11, 1) << " available" << endl;
+                    }
+                    else if (response1.find("N_invalid_class") == 0)
+                    {
+                        std::cout << "Invalid seat class\n";
                     }
                 }
             }
