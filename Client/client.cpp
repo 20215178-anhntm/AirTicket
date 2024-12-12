@@ -198,19 +198,39 @@ int main()
                     }
                     else if (lower_choice1 == "3") // view ticket detail
                     {
-                        break;
+                    	send(client_socket, "view", strlen("view"), 0);
                     }
                     else if (lower_choice1 == "4") // cancel tickets
                     {
-                        break;
+                        string ticket_code;
+                        cout << "Enter the ticket code for cancelling: ";
+                        getline(cin, ticket_code);
+                        string cancel_msg = "cancel/" + ticket_code;
+                        send(client_socket, cancel_msg.c_str(), cancel_msg.length(), 0);
                     }
                     else if (lower_choice1 == "6") // print tickets
                     {
-                        break;
+                        string choice2;
+                        cout << "Do you want to print all or print a single ticket(input the ticket code): ";
+                        getline(cin, choice2);
+                        if (choice2 == "all")
+                        {
+                            string print_msg = "print/all";
+                            send(client_socket, print_msg.c_str(), print_msg.length(), 0);
+                        }
+                        else
+                        {
+                            string print_msg = "print/" + choice2;
+                            send(client_socket, print_msg.c_str(), print_msg.length(), 0);
+                        }
                     }
                     else if (lower_choice1 == "7") // pay ticket
                     {
-                        break;
+                        string ticket_code;
+                        cout << "Enter the ticket code you want to pay: ";
+                        getline(cin, ticket_code);
+                        string pay_msg = "pay/" + ticket_code;
+                        send(client_socket, pay_msg.c_str(), pay_msg.length(), 0);
                     }
                     else if (lower_choice1 == "5") // change ticket
                     {
@@ -260,6 +280,14 @@ int main()
                     {
                         std::cout << "Can't find the flight!\n";
                     }
+                    else if (response1.find("N_found_change") == 0)
+                    {
+                        std::cout << "Can't find your ticket";
+                    }
+                    else if (response1.find("N_search") == 0)
+                    {
+                        std::cout << "Input 2->6 elements for continuing searching" << endl;
+                    }
                     else if (response1.find("Y_book/") == 0)
                     {
                         string ticket_code = response1.substr(7, 6);
@@ -284,6 +312,52 @@ int main()
                     else if (response1.find("N_invalid_class") == 0)
                     {
                         std::cout << "Invalid seat class\n";
+                    }
+                    else if (response1.find("Y_view/") == 0)
+                    {
+
+                        string ticket_data = response1.substr(7);
+                        std::cout << "Tickets information:" << endl;
+                        display_ticket_information(ticket_data);
+                    }
+                    else if (response1.find("Y_cancel/") == 0)
+                    {
+
+                        string ticket_code = response1.substr(9);
+                        std::cout << "You've cancelled ticket: " << ticket_code << endl;
+                    }
+                    else if (response1.find("N_cancel_miss") == 0)
+                    {
+                        std::cout << "Input your ticket code for cancelling";
+                    }
+                    else if (response1.find("N_cancel_err") == 0 || response1.find("N_cancel_notfound") == 0)
+                    {
+                        std::cout << "Can't find your ticket" << endl;
+                    }
+                    else if (response1.find("Y_print/") == 0)
+                    {
+
+                        string ticket_data = response1.substr(8);
+                        cout << "Saved to tickets.txt" << endl;
+                        save_all_tickets_to_file(ticket_data);
+                    }
+                    else if (response1.find("Y_print_cer/") == 0)
+                    {
+                        string ticket_data = response1.substr(12);
+                        std::cout << "Saved information about ticket " << response1.substr(19, 6) << " to " << response1.substr(19, 6) << ".txt\n";
+                        save_tickets_to_file(ticket_data, response1.substr(19, 6));
+                    }
+                    else if (response1.find("N_print_cer") == 0)
+                    {
+                        std::cout << "Can't find your ticket to print\n";
+                    }
+                    else if (response1.find("N_pay") == 0)
+                    {
+                        std::cout << "Can't find your ticket code\n";
+                    }
+                    else if (response1.find("Y_pay/") == 0)
+                    {
+                        std::cout << "You've paid " << response1.substr(6, 3) << "." << response1.substr(9, 3) << " VND for ticket " << response1.substr(12, 6) << endl;
                     }
                 }
             }

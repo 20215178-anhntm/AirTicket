@@ -1,0 +1,24 @@
+---------------------
+Flight Number: MNO345
+Ticket Code: FGG768
+Company:VietJettAir
+Departure Point: ThanhHoa
+Destination Point: KhanhHoa
+Departure Date: 2024-05-12 10:00
+Return Date: 2024-05-18 22:30
+Seat Class: A
+Ticket Price: 300.000 VND
+Payment: NOT_PAID
+---------------------
+---------------------
+Flight Number: MNO345
+Ticket Code: NIE636
+Company:VietJettAir
+Departure Point: ThanhHoa
+Destination Point: KhanhHoa
+Departure Date: 2024-05-12 10:00
+Return Date: 2024-05-18 22:30
+Seat Class: A
+Ticket Price: 300.000 VND
+Payment: NOT_PAID
+---------------------
