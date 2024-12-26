@@ -45,6 +45,17 @@ void viewTicketstable(sqlite3 *db)
         sqlite3_free(errMsg);
     }
 }
+
+void viewNotificationstable(sqlite3 *db)
+{
+    char *errMsg = nullptr;
+    const char *sql = "SELECT * FROM Notifications;";
+    if (sqlite3_exec(db, sql, callback, 0, &errMsg) != SQLITE_OK)
+    {
+        cerr << "SQL error: " << errMsg << endl;
+        sqlite3_free(errMsg);
+    }
+}
 int main()
 {
     sqlite3 *db;
@@ -65,6 +76,9 @@ int main()
     cout << "\n";
     cout << "Contents of Tickets table:" << endl;
     viewTicketstable(db);
+    cout << "\n";
+    cout << "Contents of Notifications table:" << endl;
+    viewNotificationstable(db);
 
     sqlite3_close(db);
     return 0;

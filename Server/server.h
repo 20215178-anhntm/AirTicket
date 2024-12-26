@@ -167,3 +167,4 @@ std::vector<int> get_affected_user_id(const std::string &flight_num);
 std::string get_username_from_id(int user_id);
 pair<string, string> get_old_dates(const string &flight_num);
 void handle_notifications(int client_socket, vector<int> affected_ids, const string noti, int c);
+std::vector<std::string> fetchUnreadNotifications(sqlite3 *conn, const std::string &username);

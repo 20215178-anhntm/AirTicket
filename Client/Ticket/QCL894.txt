@@ -1,0 +1,12 @@
+---------------------
+Flight Number: GHI789
+Ticket Code: QCL894
+Company:VietNamAirLine
+Departure Point: NgheAn
+Destination Point: CaoBang
+Departure Date: 2024-03-05 07:30
+Return Date: 2024-03-06
+Seat Class: A
+Ticket Price: 280.000 VND
+Paymemt: NOT_PAID;
+---------------------

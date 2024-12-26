@@ -177,6 +177,15 @@ void print_menu_search()
     std::cout << "5. Exit\n";
     std::cout << "Your choice(1-5): ";
 }
+
+void print_admin_menu()
+{
+    std::cout << "__________________________________________________\n";
+    std::cout << "1. Add flight\n2. Delete flight\n3. Modify flight\n4. Logout" << endl;
+    std::cout << "__________________________________________________\n";
+    std::cout << "Your message: ";
+}
+
 string lower(const string &input)
 {
     string result = input;
@@ -216,3 +225,5 @@ std::string trim(std::string str)
     }
     return str;
 }
+
+void processNotifications(const std::string &response);

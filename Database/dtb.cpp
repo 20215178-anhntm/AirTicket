@@ -195,6 +195,26 @@ int main()
 
         sqlite3_finalize(stmt);
     }
+    
+    const char *createNotificationsTableSQL = R"(
+    CREATE TABLE IF NOT EXISTS Notifications (
+        notification_id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        message TEXT,
+        status TEXT CHECK(status IN ('UNREAD', 'READ')) DEFAULT 'UNREAD',
+        created_at TEXT DEFAULT (datetime('now')),
+        FOREIGN KEY (user_id) REFERENCES Users(user_id)
+    )
+)";
+
+    rc = sqlite3_exec(conn, createNotificationsTableSQL, nullptr, nullptr, nullptr);
+    if (rc != SQLITE_OK)
+    {
+        cerr << "SQL error: " << sqlite3_errmsg(conn) << endl;
+        sqlite3_close(conn);
+        return 1;
+    }
+
     sqlite3_exec(conn, "COMMIT;", nullptr, nullptr, nullptr);
     sqlite3_close(conn);
 
